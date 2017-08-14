@@ -27,9 +27,17 @@
 
 (require 'seq)
 
+;; XXX Bug of `browse-url'? Encoding problem?
+;;
+;;   (browse-url "https://github.com/search?utf8=✓&q=hello%20world")
+;;
+;; will visit     https://github.com/search?utf8=%E2%9C%93&q=hello%2520world instead
+;;
+;; (noticing "hello%20world" becomes "hello%2520world")
+
 (defvar web-search-providers
   '(("Google" "https://www.google.com/search?q=%s")
-    ("GitHub" "https://github.com/search?utf8=✓&q=%s" "Code")
+    ("GitHub" "https://github.com/search?ut&q=%s" "Code")
     ("Wikipedia" "https://en.wikipedia.org/wiki/Special:Search?search=%s" "Education")))
 
 (defvar web-search-default-provider "Google")
@@ -39,14 +47,16 @@
 
 (defun web-search--find-providers (tag)
   "Return a list of providers which is tagged by TAG."
-  (seq-filter (lambda (p) (seq-contains (cddr p) tag)) web-search-providers))
+  (or (seq-filter (lambda (p) (seq-contains (cddr p) tag)) web-search-providers)
+      (error "Unknown tag '%s'" tag)))
 
 (defun web-search--format-url (query provider)
   "Format a URL for search QUERY on PROVIDER.
 PROVIDER can be a string (the name of one provider) or a
 list (one provider, i.e., one element of `web-search-providers')."
   (let ((url (cond
-              ((listp provider) (car provider))
+              ((listp provider) (cadr provider))
+              ;; XXX Ignore case?
               ((stringp provider) (cadr (assoc provider web-search-providers))))))
     (if url
         (format url (url-hexify-string query))
@@ -55,6 +65,9 @@ list (one provider, i.e., one element of `web-search-providers')."
 (defun web-search--format-urls (query providers)
   (mapcar (lambda (provider) (web-search--format-url query provider))
           providers))
+
+
+;;; Commands
 
 ;;;###autoload
 (defun web-search (query &optional providers tag)
@@ -85,6 +98,73 @@ list (one provider, i.e., one element of `web-search-providers')."
                       providers
                       (list web-search-default-provider)))
   (mapc #'browse-url (web-search--format-urls query providers)))
+
+
+;;; Batch
+
+(defun web-search-batch ()
+  (unless noninteractive
+    (user-error "`web-search-batch' can only be called in batch mode"))
+
+  (setq argv (delete "--" argv))
+
+  (when (or (seq-contains argv "-h")
+            (seq-contains argv "--help"))
+    (princ (format "\
+Web search from the command line.
+
+Usage: emacs -Q --batch -l web-search.el -f web-search-batch -- <query> [options]
+
+Options:
+  -h, --help              display help
+  -l, --list-providers    list supported providers
+      --list-tags         list available tags
+  -o, --output            output only mode
+  -p, --provider string   search provider (default \"%s\")
+  -t, --tag string        search tag
+  -v, --verbose           verbose mode
+" web-search-default-provider))
+    (kill-emacs 0))
+
+  (when (or (seq-contains argv "-l")
+            (seq-contains argv "--list-providers"))
+    (mapc (lambda (p) (princ (format "%s\n" (car p)))) web-search-providers)
+    (kill-emacs 0))
+
+  (when (seq-contains argv "--list-tags")
+    (mapc (lambda (s) (princ (format "%s\n" s))) (sort (web-search--tags) #'string<))
+    (kill-emacs 0))
+
+  (let (arg
+        verbose-mode
+        output-only-mode
+        query
+        provider
+        tag
+        providers
+        urls)
+    (while (setq arg (pop argv))
+      (pcase arg
+        ((or "-v" "--verbose") (setq verbose-mode t))
+        ((or "-o" "--output")  (setq output-only-mode t))
+        ((or "-p" "--provider") (setq provider (pop argv)))
+        ((or "-t" "--tag") (setq tag (pop argv)))
+        (_ (setq query (if query
+                           (concat query " " arg)
+                         arg)))))
+
+    (setq providers (or (and tag (web-search--find-providers tag))
+                        (and provider (list provider))
+                        (list web-search-default-provider)))
+    (setq urls (web-search--format-urls query providers))
+    (when (or verbose-mode output-only-mode)
+      (mapc (lambda (url) (princ (format "%s\n" url))) urls))
+    (unless output-only-mode
+      (mapc (lambda (url)
+              (let ((rtv (browse-url url)))
+                (when (processp rtv)
+                  (accept-process-output (browse-url url)))))
+            urls))))
 
 (provide 'web-search)
 ;;; web-search.el ends here
