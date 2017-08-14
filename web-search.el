@@ -36,9 +36,21 @@
 ;; (noticing "hello%20world" becomes "hello%2520world")
 
 (defvar web-search-providers
-  '(("Google" "https://www.google.com/search?q=%s")
-    ("GitHub" "https://github.com/search?ut&q=%s" "Code")
-    ("Wikipedia" "https://en.wikipedia.org/wiki/Special:Search?search=%s" "Education")))
+  '(
+    ;; M-x sort-lines
+    ("Bing"              "https://www.bing.com/search?q=%s" "Search")
+    ("Debian Manpages"   "https://manpages.debian.org/jump?q=%s")
+    ("Emacs China"       "https://emacs-china.org/search?q=%s")
+    ("Gist"              "https://gist.github.com/search?q=%s" "Code")
+    ("GitHub"            "https://github.com/search?ut&q=%s" "Code")
+    ("Google"            "https://www.google.com/search?q=%s" "Search")
+    ("Hacker News"       "https://hn.algolia.com/?q=%s" "Tech-News")
+    ("MacPorts"          "https://www.macports.org/ports.php?by=name&substr=%s")
+    ("Stack Overflow"    "https://stackoverflow.com/search?q=%s" "Code")
+    ("Wikipedia"         "https://en.wikipedia.org/wiki/Special:Search?search=%s" "Education")
+    ("YouTube"           "https://www.youtube.com/results?search_query=%s")
+    ;; M-x sort-lines ends
+    ))
 
 (defvar web-search-default-provider "Google")
 
