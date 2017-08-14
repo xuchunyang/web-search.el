@@ -27,20 +27,6 @@
 
 (require 'seq)
 
-;; XXX Bug of `browse-url'? Encoding problem?
-;;
-;;   (browse-url "https://github.com/search?utf8=✓&q=hello%20world")
-;;
-;; will visit     https://github.com/search?utf8=%E2%9C%93&q=hello%2520world instead
-;;
-;; (noticing "hello%20world" becomes "hello%2520world")
-;;
-;; OK, it turns out
-;; 
-;;   (start-process "open" nil "open" "https://github.com/search?utf8=✓&q=hello%20world")
-;;
-;; not working properly
-
 (defvar web-search-providers
   '(
     ;; M-x sort-lines
@@ -48,7 +34,7 @@
     ("Debian Manpages"   "https://manpages.debian.org/jump?q=%s")
     ("Emacs China"       "https://emacs-china.org/search?q=%s")
     ("Gist"              "https://gist.github.com/search?q=%s" "Code")
-    ("GitHub"            "https://github.com/search?q=%s" "Code")
+    ("GitHub"            "https://github.com/search?utf8=✓&q=%s" "Code")
     ("Google"            "https://www.google.com/search?q=%s" "Search")
     ("Hacker News"       "https://hn.algolia.com/?q=%s" "Tech-News")
     ("MacPorts"          "https://www.macports.org/ports.php?by=name&substr=%s")
@@ -77,7 +63,7 @@ list (one provider, i.e., one element of `web-search-providers')."
               ;; XXX Ignore case?
               ((stringp provider) (cadr (assoc provider web-search-providers))))))
     (if url
-        (format url (url-hexify-string query))
+        (format url query)
       (error "Unknown provider '%S'" provider))))
 
 (defun web-search--format-urls (query providers)
