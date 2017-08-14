@@ -59,9 +59,13 @@
 PROVIDER can be a string (the name of one provider) or a
 list (one provider, i.e., one element of `web-search-providers')."
   (let ((url (cond
-              ((listp provider) (cadr provider))
-              ;; XXX Ignore case?
-              ((stringp provider) (cadr (assoc provider web-search-providers))))))
+              ((listp provider)
+               (cadr provider))
+              ((stringp provider)
+               (cadr (seq-find (lambda (elt)
+                                 (string= (downcase provider)
+                                          (downcase (car elt))))
+                               web-search-providers))))))
     (if url
         (format url query)
       (error "Unknown provider '%S'" provider))))
