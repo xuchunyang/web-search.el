@@ -173,9 +173,9 @@ Options:
       (mapc (lambda (url) (princ (format "%s\n" url))) urls))
     (unless output-only-mode
       (mapc (lambda (url)
-              (let ((rtv (browse-url url)))
-                (when (processp rtv)
-                  (accept-process-output (browse-url url)))))
+              (let ((proc (browse-url url)))
+                (when (processp proc)
+                  (accept-process-output proc))))
             urls))))
 
 (provide 'web-search)
