@@ -34,38 +34,52 @@
 
 (defvar web-search-default-provider "Google")
 
-(defun web-search-tags ()
+(defun web-search--tags ()
   (seq-uniq (seq-mapcat #'cddr web-search-providers)))
 
-(defun web-search-provides-with-tag (tag)
+(defun web-search--find-providers (tag)
+  "Return a list of providers which is tagged by TAG."
   (seq-filter (lambda (p) (seq-contains (cddr p) tag)) web-search-providers))
 
-(defun web-search-format-url (query provider)
+(defun web-search--format-url (query provider)
   (let ((url (cadr (assoc provider web-search-providers))))
     (if url
         (format url (url-hexify-string query))
       (error "Provider named '%s' was not found" provider))))
 
+(defun web-search--format-urls (query providers)
+  (mapcar (lambda (provider) (web-search--format-url query provider))
+          providers))
+
 ;;;###autoload
 (defun web-search (query &optional providers tag)
   (interactive
-   (list
-    (let ((initial (if (use-region-p)
-                       (buffer-substring (region-beginning) (region-end))
-                     (current-word))))
-      (read-string "Web Search: " initial))
-    (when (equal current-prefix-arg '(4)) ; One C-u
-      (let* ((default web-search-default-provider)
-             (prompt (format "Provider (default %s): " default)))
-        (completing-read prompt web-search-providers nil t nil nil default)))
-    (when (equal current-prefix-arg '(16)) ; Two C-u
-      (completing-read "Tag: " (web-search-tags)))))
-  (unless providers
-    (setq providers (list web-search-default-provider)))
-  (when tag
-    (setq providers (web-search-provides-with-tag tag)))
-  (dolist (p providers)
-    (browse-url (web-search-format-url query p))))
+   (let* ((providers
+           (if (equal current-prefix-arg '(4)) ; One C-u
+               (let* ((default web-search-default-provider)
+                      (prompt (format "Provider (default %s): " default)))
+                 (list (completing-read prompt web-search-providers nil t nil nil default)))
+             (list web-search-default-provider)))
+          (tag
+           (when (equal current-prefix-arg '(16)) ; Two C-u
+             (completing-read "Tag: " (web-search--tags))))
+          (query
+           (let ((initial (if (use-region-p)
+                              (buffer-substring (region-beginning) (region-end))
+                            (current-word)))
+                 (prompt (format "Search %s for: "
+                                 (if tag
+                                     (format "about %s on %s" tag
+                                             (mapconcat #'identity
+                                                        (web-search--find-providers tag)
+                                                        ", "))
+                                   (concat "on " (mapconcat #'identity providers ", "))))))
+             (read-string prompt initial))))
+     (list query providers tag)))
+  (setq providers (or (and tag (web-search--find-providers tag))
+                      providers
+                      (list web-search-default-provider)))
+  (mapc #'browse-url (web-search--format-urls query providers)))
 
 (provide 'web-search)
 ;;; web-search.el ends here
