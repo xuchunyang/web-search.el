@@ -139,7 +139,8 @@ list (one provider, i.e., one element of `web-search-providers')."
 
 (defun web-search-batch ()
   (unless noninteractive
-    (user-error "`web-search-batch' can only be called in batch mode"))
+    (funcall (if (fboundp 'user-error) #'user-error #'error)
+             "`web-search-batch' can only be called in batch mode"))
 
   (setq argv (delete "--" argv))
 
