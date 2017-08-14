@@ -89,7 +89,8 @@ list (one provider, i.e., one element of `web-search-providers')."
                                  (if tag
                                      (format "about %s on %s" tag
                                              (mapconcat #'identity
-                                                        (web-search--find-providers tag)
+                                                        (mapcar #'car
+                                                                (web-search--find-providers tag))
                                                         ", "))
                                    (concat "on " (mapconcat #'identity providers ", "))))))
              (read-string prompt initial))))
