@@ -104,6 +104,9 @@ list (one provider, i.e., one element of `web-search-providers')."
                       (list web-search-default-provider)))
   (mapc #'browse-url (web-search--format-urls query providers)))
 
+;; XXX Write `helm-web-search' to make it possible to select multiple providers
+;; at a time
+
 
 ;;; Batch
 
