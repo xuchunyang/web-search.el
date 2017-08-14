@@ -42,10 +42,15 @@
   (seq-filter (lambda (p) (seq-contains (cddr p) tag)) web-search-providers))
 
 (defun web-search--format-url (query provider)
-  (let ((url (cadr (assoc provider web-search-providers))))
+  "Format a URL for search QUERY on PROVIDER.
+PROVIDER can be a string (the name of one provider) or a
+list (one provider, i.e., one element of `web-search-providers')."
+  (let ((url (cond
+              ((listp provider) (car provider))
+              ((stringp provider) (cadr (assoc provider web-search-providers))))))
     (if url
         (format url (url-hexify-string query))
-      (error "Provider named '%s' was not found" provider))))
+      (error "Unknown provider '%S'" provider))))
 
 (defun web-search--format-urls (query providers)
   (mapcar (lambda (provider) (web-search--format-url query provider))
