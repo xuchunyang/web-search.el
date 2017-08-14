@@ -42,7 +42,7 @@
     ("Debian Manpages"   "https://manpages.debian.org/jump?q=%s")
     ("Emacs China"       "https://emacs-china.org/search?q=%s")
     ("Gist"              "https://gist.github.com/search?q=%s" "Code")
-    ("GitHub"            "https://github.com/search?ut&q=%s" "Code")
+    ("GitHub"            "https://github.com/search?q=%s" "Code")
     ("Google"            "https://www.google.com/search?q=%s" "Search")
     ("Hacker News"       "https://hn.algolia.com/?q=%s" "Tech-News")
     ("MacPorts"          "https://www.macports.org/ports.php?by=name&substr=%s")
