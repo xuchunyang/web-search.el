@@ -3,7 +3,9 @@
 ;; Copyright (C) 2017  Chunyang Xu
 
 ;; Author: Chunyang Xu <mail@xuchunyang.me>
-;; Package-Requires: ((seq "1.11") (emacs "24"))
+;; URL: https://github.com/xuchunyang/web-search.el
+;; Package-Requires: ((seq "2.3") (emacs "24"))
+;; Version: 0
 ;; Keywords: web, search
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -23,16 +25,22 @@
 
 ;; Inspired by https://github.com/zquestz/s
 
+;; XXX Add documentation
+
 ;;; Code:
 
 (require 'seq)
 
-(defvar web-search-providers
-  '(
-    ;; M-x sort-lines
-    ("Bing"              "https://www.bing.com/search?q=%s" "Search")
+
+;;; Custom
+
+(defgroup web-search nil
+  "Open a web search."
+  :group 'tools)
+
+(defcustom web-search-providers
+  '(("Bing"              "https://www.bing.com/search?q=%s" "Search")
     ("Debian Manpages"   "https://manpages.debian.org/jump?q=%s")
-    ("Emacs China"       "https://emacs-china.org/search?q=%s")
     ("Gist"              "https://gist.github.com/search?q=%s" "Code")
     ("GitHub"            "https://github.com/search?utf8=✓&q=%s" "Code")
     ("Google"            "https://www.google.com/search?q=%s" "Search")
@@ -40,11 +48,24 @@
     ("MacPorts"          "https://www.macports.org/ports.php?by=name&substr=%s")
     ("Stack Overflow"    "https://stackoverflow.com/search?q=%s" "Code")
     ("Wikipedia"         "https://en.wikipedia.org/wiki/Special:Search?search=%s" "Education")
-    ("YouTube"           "https://www.youtube.com/results?search_query=%s")
-    ;; M-x sort-lines ends
-    ))
+    ("YouTube"           "https://www.youtube.com/results?search_query=%s"))
+  "Search providers, a list of (NAME URL TAG1 TAG2 ...).
+URL must contains a %s token for the query string."
+  :group 'web-search
+  ;; Well, because I can't figure out how to write a more specific type
+  :type 'sexp)
 
-(defvar web-search-default-provider "Google")
+(defcustom web-search-default-provider "Google"
+  "Default search provider."
+  :group 'web-search
+  :type (let ((providers
+               (mapcar (lambda (p)
+                         `(string :tag ,(car p) :value ,(car p)))
+                       web-search-providers)))
+          `(choice ,@providers)))
+
+
+;;; Internal
 
 (defun web-search--tags ()
   (seq-uniq (seq-mapcat #'cddr web-search-providers)))
@@ -113,6 +134,8 @@ list (one provider, i.e., one element of `web-search-providers')."
 
 
 ;;; Batch
+
+;; XXX Bash completion support?
 
 (defun web-search-batch ()
   (unless noninteractive
