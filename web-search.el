@@ -34,6 +34,12 @@
 ;; will visit     https://github.com/search?utf8=%E2%9C%93&q=hello%2520world instead
 ;;
 ;; (noticing "hello%20world" becomes "hello%2520world")
+;;
+;; OK, it turns out
+;; 
+;;   (start-process "open" nil "open" "https://github.com/search?utf8=✓&q=hello%20world")
+;;
+;; not working properly
 
 (defvar web-search-providers
   '(
