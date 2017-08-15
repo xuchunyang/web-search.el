@@ -4,8 +4,9 @@
 #
 # Usage: Type 'web-search --help' to learn
 
+
 EMACS=${EMACS:-emacs}
 
-WEB_SEARCH="${0##*/}" "$EMACS" -Q --batch -l web-search.el -f web-search-batch -- "$@"
+WEB_SEARCH="${0##*/}" "$EMACS" -Q --batch -l "${0%/*}/web-search.el" -f web-search-batch -- "$@"
 
 # TODO: Provide completion for providers/tags, that is, -p/-t.

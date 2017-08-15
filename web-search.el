@@ -25,9 +25,12 @@
 
 ;;; Commentary:
 
-;; Inspired by https://github.com/zquestz/s
-
-;; XXX Add documentation
+;; Open a web search.  Idea from https://github.com/zquestz/s
+;;
+;; To use, in Emacs, use the command `web-search', in Terminal, use the Bash
+;; script ./web-search under the same directory.
+;;
+;; Please see https://github.com/xuchunyang/web-search.el for documentation.
 
 ;;; Code:
 
@@ -42,7 +45,6 @@
 
 (defcustom web-search-providers
   '(("Bing"              "https://www.bing.com/search?q=%s" "Search")
-    ("Debian Manpages"   "https://manpages.debian.org/jump?q=%s")
     ("Gist"              "https://gist.github.com/search?q=%s" "Code")
     ("GitHub"            "https://github.com/search?q=%s" "Code")
     ("Google"            "https://www.google.com/search?q=%s" "Search")
@@ -102,6 +104,11 @@ list (one provider, i.e., one element of `web-search-providers')."
 
 ;;;###autoload
 (defun web-search (query &optional providers tag)
+  "Search for QUERY on website(s).
+
+Without prefix argument, search on `web-search-default-provider'.
+One C-u, choose a provider.
+Two C-u, choose a tag (notes that a tag can match multiple providers)."
   (interactive
    (let* ((providers
            (if (equal current-prefix-arg '(4)) ; One C-u
@@ -130,9 +137,6 @@ list (one provider, i.e., one element of `web-search-providers')."
                       providers
                       (list web-search-default-provider)))
   (mapc #'browse-url (web-search--format-urls query providers)))
-
-;; XXX Write `helm-web-search' to make it possible to select multiple providers
-;; at a time
 
 
 ;;; Batch
