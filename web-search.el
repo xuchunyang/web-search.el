@@ -76,7 +76,12 @@ URL must contains a %s token for the query string."
 
 (defun web-search--find-providers (tag)
   "Return a list of providers which is tagged by TAG."
-  (or (seq-filter (lambda (p) (seq-contains (cddr p) tag)) web-search-providers)
+  (or (seq-filter (lambda (p)
+                    (seq-contains (cddr p)
+                                  tag
+                                  (lambda (s1 s2)
+                                    (string= (downcase s1) (downcase s2)))))
+                  web-search-providers)
       (error "Unknown tag '%s'" tag)))
 
 (defun web-search--format-url (query provider)
