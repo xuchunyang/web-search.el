@@ -5,8 +5,10 @@
 ;; Author: Chunyang Xu <mail@xuchunyang.me>
 ;; URL: https://github.com/xuchunyang/web-search.el
 ;; Package-Requires: ((seq "2.3") (emacs "24"))
-;; Version: 0
 ;; Keywords: web, search
+;; Version: 0.1.0
+
+(defconst web-search-version "0.1.0" "Version number of `web-search.el'.")
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -42,7 +44,7 @@
   '(("Bing"              "https://www.bing.com/search?q=%s" "Search")
     ("Debian Manpages"   "https://manpages.debian.org/jump?q=%s")
     ("Gist"              "https://gist.github.com/search?q=%s" "Code")
-    ("GitHub"            "https://github.com/search?utf8=✓&q=%s" "Code")
+    ("GitHub"            "https://github.com/search?q=%s" "Code")
     ("Google"            "https://www.google.com/search?q=%s" "Search")
     ("Hacker News"       "https://hn.algolia.com/?q=%s" "Tech-News")
     ("MacPorts"          "https://www.macports.org/ports.php?by=name&substr=%s")
@@ -88,7 +90,7 @@ list (one provider, i.e., one element of `web-search-providers')."
                                           (downcase (car elt))))
                                web-search-providers))))))
     (if url
-        (format url query)
+        (format url (url-hexify-string query))
       (error "Unknown provider '%S'" provider))))
 
 (defun web-search--format-urls (query providers)
@@ -135,7 +137,24 @@ list (one provider, i.e., one element of `web-search-providers')."
 
 ;;; Batch
 
-;; XXX Bash completion support?
+(defun web-search-batch-print-usage ()
+  (princ (format "\
+Web search from the terminal.
+
+Usage: %s <query> [options]
+
+Options:
+  -h, --help              display help
+  -l, --list-providers    list supported providers
+      --list-tags         list available tags
+  -o, --output            output only mode
+  -p, --provider string   search provider (default \"%s\")
+  -t, --tag string        search tag
+  -v, --verbose           verbose mode
+      --version           display version
+" (or (getenv "WEB_SEARCH")
+      "emacs -Q --batch -l web-search.el -f web-search-batch --")
+web-search-default-provider)))
 
 (defun web-search-batch ()
   (unless noninteractive
@@ -146,20 +165,12 @@ list (one provider, i.e., one element of `web-search-providers')."
 
   (when (or (seq-contains argv "-h")
             (seq-contains argv "--help"))
-    (princ (format "\
-Web search from the command line.
+    (web-search-batch-print-usage)
+    (kill-emacs 0))
 
-Usage: emacs -Q --batch -l web-search.el -f web-search-batch -- <query> [options]
-
-Options:
-  -h, --help              display help
-  -l, --list-providers    list supported providers
-      --list-tags         list available tags
-  -o, --output            output only mode
-  -p, --provider string   search provider (default \"%s\")
-  -t, --tag string        search tag
-  -v, --verbose           verbose mode
-" web-search-default-provider))
+  (when (seq-contains argv "--version")
+    (princ (format "web-search.el %s\nGNU Emacs %s\n"
+                   web-search-version emacs-version))
     (kill-emacs 0))
 
   (when (or (seq-contains argv "-l")
@@ -188,7 +199,10 @@ Options:
         (_ (setq query (if query
                            (concat query " " arg)
                          arg)))))
-
+    (unless query
+      (web-search-batch-print-usage)
+      (kill-emacs 1))
+    
     (setq providers (or (and tag (web-search--find-providers tag))
                         (and provider (list provider))
                         (list web-search-default-provider)))

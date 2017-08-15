@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#
+# web-search - Bash wrapper of web-search.el
+#
+# Usage: Type 'web-search --help' to learn
+
+EMACS=${EMACS:-emacs}
+
+WEB_SEARCH="${0##*/}" "$EMACS" -Q --batch -l web-search.el -f web-search-batch -- "$@"
+
+# TODO: Provide completion for providers/tags, that is, -p/-t.
