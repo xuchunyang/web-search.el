@@ -1,7 +1,5 @@
 # web-search.el
 
-_Inspired by [zquestz/s: Open a web search in your terminal.](https://github.com/zquestz/s)_
-
 Web search from Emacs and the terminal. Just opens in your browser.
 
 From Emacs, use `M-x web-search foo` to search for "foo" on the default website,
@@ -83,13 +81,27 @@ or `~/.zshrc`.
 ```
 
 ## Supported Providers
+
 <!-- (dolist (p web-search-providers) (insert "* " (car p) "\n")) -->
+* 500px
+* Arch Package
+* Arch Wiki
 * Bing
+* Debian Manpages
+* Debian Package
 * Gist
 * GitHub
 * Google
 * Hacker News
 * MacPorts
+* Pinterest
+* Reddit
+* RubyGems
 * Stack Overflow
 * Wikipedia
 * YouTube
+* Zhihu
+
+## Acknowledgment
+
+This project is inspired by [zquestz/s: Open a web search in your terminal.](https://github.com/zquestz/s).

@@ -44,17 +44,32 @@
   :group 'tools)
 
 (defcustom web-search-providers
-  '(("Bing"              "https://www.bing.com/search?q=%s" "Search")
+  '(
+    ;; M-x sort-lines
+    ("500px"             "https://500px.com/search?q=%s&type=photos" "Photos")
+    ("Arch Package"      "https://www.archlinux.org/packages/?q=%s" "Arch Linux")
+    ("Arch Wiki"         "https://wiki.archlinux.org/index.php?search=%s" "Arch Linux")
+    ("Bing"              "https://www.bing.com/search?q=%s" "Search")
+    ("Debian Manpages"   "https://manpages.debian.org/jump?q=%s")
+    ("Debian Package"    "https://packages.debian.org/search?keywords=%s&searchon=names&suite=stable&section=all")
     ("Gist"              "https://gist.github.com/search?q=%s" "Code")
     ("GitHub"            "https://github.com/search?q=%s" "Code")
     ("Google"            "https://www.google.com/search?q=%s" "Search")
     ("Hacker News"       "https://hn.algolia.com/?q=%s" "Tech-News")
     ("MacPorts"          "https://www.macports.org/ports.php?by=name&substr=%s")
+    ("Pinterest"         "https://www.pinterest.com/search/pins/?q=%s")
+    ("Reddit"            web-search-providers--format-url:reddit)
+    ("RubyGems"          "https://rubygems.org/search?query=%s")
     ("Stack Overflow"    "https://stackoverflow.com/search?q=%s" "Code")
     ("Wikipedia"         "https://en.wikipedia.org/wiki/Special:Search?search=%s" "Education")
-    ("YouTube"           "https://www.youtube.com/results?search_query=%s"))
+    ("YouTube"           "https://www.youtube.com/results?search_query=%s")
+    ("Zhihu"             "https://www.zhihu.com/search?type=content&q=%s" "Forums")
+    ;; M-x sort-lines ends here
+    )
   "Search providers, a list of (NAME URL TAG1 TAG2 ...).
-URL must contains a %s token for the query string."
+URL can be either String or Function.
+If it is a string, it must contains a %s token for the query string.
+If it is a function, it must takes a argument which is the query string."
   :group 'web-search
   ;; Well, because I can't figure out how to write a more specific type
   :type 'sexp)
@@ -70,6 +85,21 @@ URL must contains a %s token for the query string."
 
 
 ;;; Internal
+
+(defun web-search-providers--format-url:reddit (query)
+  "Build search URL base on QUERY.
+
+If QUERY looks like \"/r/subreddit query\", treat as subreddit
+and do restrict search on the subreddit. Otherwise, treat it as
+regular reddit search"
+  (if (string-match "^/r/\\([^ ]*\\) \\(.*\\)" query)
+      (let ((subreddit (match-string 1 query))
+            (new-query (match-string 2 query)))
+        (format "https://www.reddit.com/r/%s/search?q=%s&restrict_sr=on"
+                subreddit
+                (url-hexify-string new-query)))
+    (format "https://www.reddit.com/search?q=%s"
+            (url-hexify-string query))))
 
 (defun web-search--tags ()
   (seq-uniq (seq-mapcat #'cddr web-search-providers)))
@@ -88,17 +118,18 @@ URL must contains a %s token for the query string."
   "Format a URL for search QUERY on PROVIDER.
 PROVIDER can be a string (the name of one provider) or a
 list (one provider, i.e., one element of `web-search-providers')."
-  (let ((url (cond
-              ((listp provider)
-               (cadr provider))
-              ((stringp provider)
-               (cadr (seq-find (lambda (elt)
-                                 (string= (downcase provider)
-                                          (downcase (car elt))))
-                               web-search-providers))))))
-    (if url
-        (format url (url-hexify-string query))
-      (error "Unknown provider '%S'" provider))))
+  (let ((url-or-func
+         (cond
+          ((listp provider)
+           (cadr provider))
+          ((stringp provider)
+           (cadr (seq-find (lambda (elt)
+                             (string= (downcase provider)
+                                      (downcase (car elt))))
+                           web-search-providers))))))
+    (cond ((stringp url-or-func) (format url-or-func (url-hexify-string query)))
+          ((functionp url-or-func) (funcall url-or-func query))
+          (t  (error "Unknown provider '%S'" provider)))))
 
 (defun web-search--format-urls (query providers)
   (mapcar (lambda (provider) (web-search--format-url query provider))
