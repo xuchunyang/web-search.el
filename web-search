@@ -29,5 +29,3 @@ else
 fi
 
 WEB_SEARCH_PROGRAM_NAME="${0##*/}" "$EMACS" -Q --batch -l "${web_search_program_root}/web-search.el" -f web-search-batch -- "$@"
-
-# TODO: Provide completion for providers/tags, that is, -p/-t.

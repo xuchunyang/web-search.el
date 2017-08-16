@@ -73,6 +73,15 @@ To search [Emacs China](https://emacs-china.org/):
       web-search-providers)
 ```
 
+## Bash/Zsh Completion
+
+Put the following line to your Bash or Zsh configuration file such as`~/.bashrc`
+or `~/.zshrc`.
+
+```sh
+. /path/to/web-search-completion.bash
+```
+
 ## Supported Providers
 <!-- (dolist (p web-search-providers) (insert "* " (car p) "\n")) -->
 * Bing
