@@ -4,9 +4,30 @@
 #
 # Usage: Type 'web-search --help' to learn
 
-
 EMACS=${EMACS:-emacs}
 
-WEB_SEARCH="${0##*/}" "$EMACS" -Q --batch -l "${0%/*}/web-search.el" -f web-search-batch -- "$@"
+# https://stackoverflow.com/questions/7665/how-to-resolve-symbolic-links-in-a-shell-script
+_realpath () {
+    if command -v realpath &>/dev/null; then
+        realpath "$0"
+    elif command -v grealpath &>/dev/null; then
+        grealpath "$0"
+    else
+        if [[ "$OSTYPE" == "darwin*" ]]; then
+            /usr/bin/readlink "$0"
+        else
+            readlink -f "$0"
+        fi
+    fi
+}
+
+if [[ -L "$0" ]]; then
+    real="$(_realpath "$0")"
+    web_search_program_root="${real%/*}/"
+else
+    web_search_program_root="${0%/*}/"
+fi
+
+WEB_SEARCH_PROGRAM_NAME="${0##*/}" "$EMACS" -Q --batch -l "${web_search_program_root}/web-search.el" -f web-search-batch -- "$@"
 
 # TODO: Provide completion for providers/tags, that is, -p/-t.
