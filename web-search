@@ -28,6 +28,11 @@ else
     web_search_program_root="${0%/*}/"
 fi
 
+if [[ "$1" == "--completion" ]]; then
+    cat "${web_search_program_root}/web-search-completion.bash"
+    exit
+fi
+
 if [[ -f "$HOME/.config/web-search-config.el" ]]; then
     web_search_configuration="$HOME/.config/web-search-config.el"
 elif [[ -f "$HOME/.web-search-config.el" ]]; then

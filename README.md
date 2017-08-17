@@ -23,6 +23,8 @@ Options:
   -t, --tag string        search tag
   -v, --verbose           verbose mode
       --version           display version
+      --completion        display completion code for Bash/Zsh
+
 ```
 
 # Examples
@@ -80,7 +82,7 @@ Put the following line to your Bash or Zsh configuration file such as`~/.bashrc`
 or `~/.zshrc`.
 
 ```sh
-source /path/to/web-search-completion.bash
+eval "$(web-search --completion)"
 ```
 
 ## Supported Providers

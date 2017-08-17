@@ -17,7 +17,7 @@ _provider_completion()
 {
     local cur=${COMP_WORDS[COMP_CWORD]}
     local prev=${COMP_WORDS[COMP_CWORD-1]}
-    local longOpts="--help --list-providers --list-tags --provider --tag --output --verbose --version"
+    local longOpts="--help --list-providers --list-tags --provider --tag --output --verbose --version --completion"
 
     # _filedir (in newer bash completions) is a huge improvement on compgen -f or compgen -G
     # because it deals correctly with spaces, ~ expansion, and .inputrc preferences.

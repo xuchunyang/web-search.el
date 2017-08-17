@@ -192,6 +192,7 @@ Options:
   -t, --tag string        search tag
   -v, --verbose           verbose mode
       --version           display version
+      --completion        display completion code for Bash/Zsh
 " (or (getenv "WEB_SEARCH_PROGRAM_NAME")
       "emacs -Q --batch -l web-search.el -f web-search-batch --")
 web-search-default-provider)))
