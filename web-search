@@ -28,4 +28,14 @@ else
     web_search_program_root="${0%/*}/"
 fi
 
-WEB_SEARCH_PROGRAM_NAME="${0##*/}" "$EMACS" -Q --batch -l "${web_search_program_root}/web-search.el" -f web-search-batch -- "$@"
+if [[ -f "$HOME/.config/web-search-config.el" ]]; then
+    web_search_configuration="$HOME/.config/web-search-config.el"
+elif [[ -f "$HOME/.web-search-config.el" ]]; then
+    web_search_configuration="$HOME/.web-search-config.el"
+fi
+
+if [[ -z "$web_search_configuration" ]]; then
+    WEB_SEARCH_PROGRAM_NAME="${0##*/}" "$EMACS" -Q --batch -l "${web_search_program_root}/web-search.el" -f web-search-batch -- "$@"
+else
+    WEB_SEARCH_PROGRAM_NAME="${0##*/}" "$EMACS" -Q --batch -l "${web_search_program_root}/web-search.el" -l "$web_search_configuration" -f web-search-batch -- "$@"
+fi

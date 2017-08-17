@@ -56,15 +56,18 @@ $ web-search -t code string-length
 
 ## Customization
 
-See the user option `web-search-providers` and `web-search-default-provider`.
+See the user option `web-search-providers` and `web-search-default-provider`. To
+customize the command line program `web-search`, you can put your configuration
+into `$HOME/.config/web-search-config.el` or `$HOME/.web-search-config.el`, it
+will be loaded *after* `web-search.el` has been loaded.
 
-Set your default provider to Bing:
+For example, to change the default provider from Google to Bing:
 
 ```elisp
 (setq web-search-default-provider "Bing")
 ```
 
-To search [Emacs China](https://emacs-china.org/):
+and to search something on [Emacs China](https://emacs-china.org/):
 
 ```elisp
 (push '("Emacs China" "https://emacs-china.org/search?q=%s")
@@ -77,7 +80,7 @@ Put the following line to your Bash or Zsh configuration file such as`~/.bashrc`
 or `~/.zshrc`.
 
 ```sh
-. /path/to/web-search-completion.bash
+source /path/to/web-search-completion.bash
 ```
 
 ## Supported Providers
@@ -104,4 +107,4 @@ or `~/.zshrc`.
 
 ## Acknowledgment
 
-This project is inspired by [zquestz/s: Open a web search in your terminal.](https://github.com/zquestz/s).
+This project is inspired by https://github.com/zquestz/s.
