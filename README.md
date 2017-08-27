@@ -1,12 +1,10 @@
 # web-search.el
 
-Web search from Emacs and the terminal. Just opens in your browser.
+Web search from Emacs and the terminal. Open URL in your default web browser.
 
-From Emacs, use `M-x web-search foo` to search for "foo" on the default website,
-if prefixed with one or two `C-u`, you will be asked which website(s) to search
-on, see the docstring to learn more.
+From Emacs, type `M-x web-search`.
 
-From the terminal,
+From the terminal, use `web-search`:
 
 ```
 $ web-search -h
@@ -78,7 +76,7 @@ and to search something on [Emacs China](https://emacs-china.org/):
 
 ## Bash/Zsh Completion
 
-Put the following line to your Bash or Zsh configuration file such as`~/.bashrc`
+Put the following line to your Bash or Zsh configuration file such as `~/.bashrc`
 or `~/.zshrc`.
 
 ```sh
