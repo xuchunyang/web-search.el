@@ -13,11 +13,6 @@ env:
   global:
     - CURL="curl -fsSkL --retry 9 --retry-delay 9"
   matrix:
-    - EMACS_VERSION=24.1
-    - EMACS_VERSION=24.2
-    - EMACS_VERSION=24.3
-    - EMACS_VERSION=24.4
-    - EMACS_VERSION=24.5
     - EMACS_VERSION=25.1
     - EMACS_VERSION=25.2
     - EMACS_VERSION=master
@@ -29,9 +24,6 @@ install:
   - tar -xaf emacs-bin-${EMACS_VERSION}.tar.gz -C /
   - export EMACS=/tmp/emacs/bin/emacs
   - $EMACS --version
-  - $CURL -O http://elpa.gnu.org/packages/seq-2.20.tar
-  - tar -xf seq-2.20.tar
-  - mv seq-2.20/*.el .
 
 script:
   - make test
