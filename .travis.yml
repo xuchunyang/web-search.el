@@ -1,5 +1,14 @@
-sudo: false
 language: generic
+
+sudo: false
+
+addons:
+  apt:
+    sources:
+    - debian-sid                # Grab shellcheck from the Debian repo (o_O)
+    packages:
+    - shellcheck
+
 env:
   global:
     - CURL="curl -fsSkL --retry 9 --retry-delay 9"
@@ -9,10 +18,12 @@ env:
     - EMACS_VERSION=master
   allow_failures:
     - env: EMACS_VERSION=master
+
 install:
   - $CURL -O https://github.com/npostavs/emacs-travis/releases/download/bins/emacs-bin-${EMACS_VERSION}.tar.gz
   - tar -xaf emacs-bin-${EMACS_VERSION}.tar.gz -C /
   - export EMACS=/tmp/emacs/bin/emacs
   - $EMACS --version
+
 script:
-  - make test EMACS=$EMACS
+  - make test
