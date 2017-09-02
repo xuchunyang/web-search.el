@@ -6,5 +6,7 @@
 
 set -o errexit
 
-diff <(web-search -o hello world) <(echo 'https://www.google.com/search?q=hello%20world')
-diff <(web-search -o -p reddit /r/emacs vim) <(echo 'https://www.reddit.com/r/emacs/search?q=vim&restrict_sr=on')
+ROOT=$(realpath $(dirname $0)/../)
+
+diff <($ROOT/web-search -o hello world) <(echo 'https://www.google.com/search?q=hello%20world')
+diff <($ROOT/web-search -o -p reddit /r/emacs vim) <(echo 'https://www.reddit.com/r/emacs/search?q=vim&restrict_sr=on')
