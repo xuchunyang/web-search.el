@@ -21,7 +21,7 @@ Options:
   -t, --tag string        search tag
   -v, --verbose           verbose mode
       --version           display version
-      --completion        display completion code for Bash/Zsh
+      --completion        display completion code for Bash
 
 ```
 
@@ -74,10 +74,9 @@ and to search something on [Emacs China](https://emacs-china.org/):
       web-search-providers)
 ```
 
-## Bash/Zsh Completion
+## Bash Completion
 
-Put the following line to your Bash or Zsh configuration file such as `~/.bashrc`
-or `~/.zshrc`.
+Put the following line to your Bash configuration file such as `~/.bashrc`
 
 ```sh
 eval "$(web-search --completion)"
