@@ -1,4 +1,4 @@
-# web-search.el
+# web-search.el [![MELPA](https://melpa.org/packages/web-search-badge.svg)](https://melpa.org/#/web-search)
 
 Web search from Emacs and the terminal. Open URL in your default web browser.
 
