@@ -201,22 +201,22 @@ web-search-default-provider)))
 
   (setq argv (delete "--" argv))
 
-  (when (or (member argv "-h")
-            (member argv "--help"))
+  (when (or (member "-h" argv)
+            (member "--help" argv))
     (web-search-batch-print-usage)
     (kill-emacs 0))
 
-  (when (member argv "--version")
+  (when (member "--version" argv)
     (princ (format "web-search.el %s\nGNU Emacs %s\n"
                    web-search-version emacs-version))
     (kill-emacs 0))
 
-  (when (or (member argv "-l")
-            (member argv "--list-providers"))
+  (when (or (member "-l" argv)
+            (member "--list-providers" argv))
     (mapc (lambda (p) (princ (format "%s\n" (car p)))) web-search-providers)
     (kill-emacs 0))
 
-  (when (member argv "--list-tags")
+  (when (member "--list-tags" argv)
     (mapc (lambda (s) (princ (format "%s\n" s))) (sort (web-search--tags) #'string<))
     (kill-emacs 0))
 
