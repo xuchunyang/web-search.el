@@ -109,7 +109,7 @@ regular reddit search"
 (defun web-search--find-providers (tag)
   "Return a list of providers which is tagged by TAG."
   (or (cl-loop for p in web-search-providers
-               when (member tag (cddr p))
+               when (member (downcase tag) (mapcar #'downcase (cddr p)))
                collect p)
       (error "Unknown tag '%s'" tag)))
 
