@@ -4,7 +4,7 @@
 
 ;; Author: Chunyang Xu <mail@xuchunyang.me>
 ;; URL: https://github.com/xuchunyang/web-search.el
-;; Package-Requires: ((seq "2.3") (emacs "24"))
+;; Package-Requires: ((emacs "24.3"))
 ;; Keywords: web, search
 ;; Version: 0.1.0
 
@@ -34,7 +34,7 @@
 
 ;;; Code:
 
-(require 'seq)
+(require 'cl-lib)
 
 
 ;;; Custom
@@ -102,16 +102,15 @@ regular reddit search"
             (url-hexify-string query))))
 
 (defun web-search--tags ()
-  (seq-uniq (seq-mapcat #'cddr web-search-providers)))
+  (delete-dups
+   (cl-loop for p in web-search-providers
+            append (cddr p))))
 
 (defun web-search--find-providers (tag)
   "Return a list of providers which is tagged by TAG."
-  (or (seq-filter (lambda (p)
-                    (seq-contains (cddr p)
-                                  tag
-                                  (lambda (s1 s2)
-                                    (string= (downcase s1) (downcase s2)))))
-                  web-search-providers)
+  (or (cl-loop for p in web-search-providers
+               when (member tag (cddr p))
+               collect p)
       (error "Unknown tag '%s'" tag)))
 
 (defun web-search--format-url (query provider)
@@ -123,10 +122,10 @@ list (one provider, i.e., one element of `web-search-providers')."
           ((listp provider)
            (cadr provider))
           ((stringp provider)
-           (cadr (seq-find (lambda (elt)
-                             (string= (downcase provider)
-                                      (downcase (car elt))))
-                           web-search-providers))))))
+           (cl-loop for p in web-search-providers
+                    when (string= (downcase provider)
+                                  (downcase (car p)))
+                    return (cadr p))))))
     (cond ((stringp url-or-func) (format url-or-func (url-hexify-string query)))
           ((functionp url-or-func) (funcall url-or-func query))
           (t  (error "Unknown provider '%S'" provider)))))
@@ -202,22 +201,22 @@ web-search-default-provider)))
 
   (setq argv (delete "--" argv))
 
-  (when (or (seq-contains argv "-h")
-            (seq-contains argv "--help"))
+  (when (or (member argv "-h")
+            (member argv "--help"))
     (web-search-batch-print-usage)
     (kill-emacs 0))
 
-  (when (seq-contains argv "--version")
+  (when (member argv "--version")
     (princ (format "web-search.el %s\nGNU Emacs %s\n"
                    web-search-version emacs-version))
     (kill-emacs 0))
 
-  (when (or (seq-contains argv "-l")
-            (seq-contains argv "--list-providers"))
+  (when (or (member argv "-l")
+            (member argv "--list-providers"))
     (mapc (lambda (p) (princ (format "%s\n" (car p)))) web-search-providers)
     (kill-emacs 0))
 
-  (when (seq-contains argv "--list-tags")
+  (when (member argv "--list-tags")
     (mapc (lambda (s) (princ (format "%s\n" s))) (sort (web-search--tags) #'string<))
     (kill-emacs 0))
 
