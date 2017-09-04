@@ -52,6 +52,7 @@
     ("Bing"              "https://www.bing.com/search?q=%s" "Search")
     ("Debian Manpages"   "https://manpages.debian.org/jump?q=%s")
     ("Debian Package"    "https://packages.debian.org/search?keywords=%s&searchon=names&suite=stable&section=all")
+    ("DuckDuckGo"        "https://duckduckgo.com/lite/?q=%s" "Search")
     ("Gist"              "https://gist.github.com/search?q=%s" "Code")
     ("GitHub"            "https://github.com/search?q=%s" "Code")
     ("Google"            "https://www.google.com/search?q=%s" "Search")
