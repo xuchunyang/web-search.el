@@ -91,6 +91,7 @@ eval "$(web-search --completion)"
 * Bing
 * Debian Manpages
 * Debian Package
+* DuckDuckGo
 * Gist
 * GitHub
 * Google
