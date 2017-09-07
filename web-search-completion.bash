@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 #
-# web-search-completion - bash provider completion support for web-search
+# web-search-completion - bash/zsh provider completion support for web-search
 #
-# Usage: Add the following line to .bashrc
+# Usage: Add the following line to .bashrc or .zshrc
 #
 #   . /path/to/web-search-completion.bash
 # 
 # This file is adapted from https://raw.githubusercontent.com/zquestz/s/master/autocomplete/s-completion.bash
+
+if [[ -n ${ZSH_VERSION-} ]]; then
+    autoload -U +X compinit && compinit
+    autoload -U +X bashcompinit && bashcompinit
+fi
 
 _provider_completion()
 {
