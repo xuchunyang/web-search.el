@@ -88,6 +88,7 @@ eval "$(web-search --completion)"
 * 500px
 * Arch Package
 * Arch Wiki
+* Bandcamp
 * Bing
 * Debian Manpages
 * Debian Package
@@ -100,6 +101,7 @@ eval "$(web-search --completion)"
 * Pinterest
 * Reddit
 * RubyGems
+* Soundcloud
 * Stack Overflow
 * Wikipedia
 * YouTube
