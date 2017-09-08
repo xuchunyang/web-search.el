@@ -6,9 +6,9 @@
 ;; URL: https://github.com/xuchunyang/web-search.el
 ;; Package-Requires: ((emacs "24.3"))
 ;; Keywords: web, search
-;; Version: 0.1.0
+;; Version: 0.1.1
 
-(defconst web-search-version "0.1.0" "Version number of `web-search.el'.")
+(defconst web-search-version "0.1.1" "Version number of `web-search.el'.")
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -197,6 +197,8 @@ Options:
       "emacs -Q --batch -l web-search.el -f web-search-batch --")
 web-search-default-provider)))
 
+;; XXX: Improve command line argument handling, for exampke, 'web-search -op
+;; Google' should be supported
 (defun web-search-batch ()
   (unless noninteractive
     (funcall (if (fboundp 'user-error) #'user-error #'error)
