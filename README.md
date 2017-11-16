@@ -30,7 +30,7 @@ Options:
 Search for puppies on google.
 ```
 ;; From Emacs
-M-x web-search puppies
+M-x web-search RET puppies RET
 
 # From the terminal
 $ web-search puppies
@@ -39,7 +39,7 @@ $ web-search puppies
 Search for rhinos on wikipedia
 ```
 ;; From Emacs
-C-u M-x web-search Wikipedia rhinos
+C-u M-x web-search RET Wikipedia RET rhinos RET
 
 # From the terminal
 $ web-search -p wikipedia rhinos
@@ -48,7 +48,7 @@ $ web-search -p wikipedia rhinos
 Search providers tagged "Code" for string-length.
 ```
 ;; From Emacs
-C-u C-u M-x web-search Code string-length
+C-u C-u M-x web-search RET Code RET string-length RET
 
 # From the terminal
 $ web-search -t code string-length
