@@ -153,20 +153,20 @@ Two C-u, choose a tag (notes that a tag can match multiple providers)."
                (let* ((default web-search-default-provider)
                       (prompt (format "Provider (default %s): " default)))
                  (list (completing-read prompt web-search-providers nil t nil nil default)))
-             (list web-search-default-provider)))
+               (list web-search-default-provider)))
           (tag
            (when (equal current-prefix-arg '(16)) ; Two C-u
              (completing-read "Tag: " (web-search--tags))))
           (query
            (let ((initial (if (use-region-p)
-                              (buffer-substring (region-beginning) (region-end))
-                            (current-word)))
+                              (buffer-substring-no-properties (region-beginning) (region-end))
+                              (current-word)))
                  (prompt (format "Search %s: "
                                  (if tag
                                      (mapconcat #'identity
                                                 (mapcar #'car (web-search--find-providers tag))
                                                 ", ") 
-                                   (mapconcat #'identity providers ", ")))))
+                                     (mapconcat #'identity providers ", ")))))
              (read-string prompt initial))))
      (list query providers tag)))
   (setq providers (or (and tag (web-search--find-providers tag))
