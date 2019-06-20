@@ -1,14 +1,14 @@
 ;;; web-search.el --- Open a web search  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017, 2019  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; URL: https://github.com/xuchunyang/web-search.el
 ;; Package-Requires: ((emacs "24.3"))
 ;; Keywords: web, search
-;; Version: 0.1.1
+;; Version: 0.1.2
 
-(defconst web-search-version "0.1.1" "Version number of `web-search.el'.")
+(defconst web-search-version "0.1.2" "Version number of `web-search.el'.")
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
