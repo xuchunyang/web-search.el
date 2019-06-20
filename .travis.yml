@@ -2,13 +2,6 @@ language: generic
 
 sudo: false
 
-addons:
-  apt:
-    sources:
-    - debian-sid                # Grab shellcheck from the Debian repo (o_O)
-    packages:
-    - shellcheck
-
 env:
   global:
     - CURL="curl -fsSkL --retry 9 --retry-delay 9"
