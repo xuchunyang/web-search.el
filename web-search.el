@@ -151,7 +151,8 @@ Two C-u, choose a tag (notes that a tag can match multiple providers)."
    (let* ((providers
            (if (equal current-prefix-arg '(4)) ; One C-u
                (let* ((default web-search-default-provider)
-                      (prompt (format "Provider (default %s): " default)))
+                      (prompt (format "Provider (default %s): " default))
+                      (completion-ignore-case t))
                  (list (completing-read prompt web-search-providers nil t nil nil default)))
                (list web-search-default-provider)))
           (tag
