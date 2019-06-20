@@ -1,4 +1,4 @@
-# web-search.el [![Build Status](https://travis-ci.org/xuchunyang/web-search.el.svg?branch=master)](https://travis-ci.org/xuchunyang/web-search.el) [![MELPA](https://melpa.org/packages/web-search-badge.svg)](https://melpa.org/#/web-search)
+# web-search.el [![Build Status](https://travis-ci.org/xuchunyang/web-search.el.svg?branch=master)](https://travis-ci.org/xuchunyang/web-search.el) [![MELPA](https://melpa.org/packages/web-search-badge.svg)](https://melpa.org/#/web-search) [![MELPA Stable](https://stable.melpa.org/packages/web-search-badge.svg)](https://stable.melpa.org/#/web-search)
 
 Web search from Emacs and the terminal. Open URL in your default web browser.
 
